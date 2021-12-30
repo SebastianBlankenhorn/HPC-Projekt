@@ -7,6 +7,16 @@
 #define Y 1024
 #define X 1024
 
+#define P 16   // Anzahl Threads
+#define N 1024 //Groesse Matrix
+
+// Wurzel(P)
+#define BLOCKS_Y 4
+#define BLOCKS_X 4
+
+#define BLOCKSIZEX (N / BLOCKS_X)
+#define BLOCKSIZEY (N / BLOCKS_Y)
+
 struct entity
 {
     char typ;
@@ -534,9 +544,45 @@ void FischSchritt(int i, int j)
     }
 }
 
-void SchrittOMP()
+void SchrittTiling() //Nicht schneller
 {
 #pragma omp parallel for
+    for (int block = 0; block < P; block++)
+    {
+        int blocky = block / BLOCKS_X;
+        int blockx = block % BLOCKS_X;
+        int ystart = blocky * BLOCKSIZEY;
+        int yend = ystart + BLOCKSIZEY;
+        if (yend > N)
+        {
+            yend = N;
+        }
+        int xstart = blockx * BLOCKSIZEX;
+        int xend = xstart + BLOCKSIZEX;
+        if (xend > N)
+        {
+            xend = N;
+        }
+        for (int y = ystart; y < yend; y++)
+        {
+            for (int x = xstart; x < xend; x++)
+            {
+                if (spielfeld[x][y].typ == 'h' && spielfeld[x][y].bewegt == 0)
+                {
+                    HaiSchritt(x, y);
+                }
+                else if (spielfeld[x][y].typ == 'f' && spielfeld[x][y].bewegt == 0)
+                {
+                    FischSchritt(x, y);
+                }
+            }
+        }
+    }
+}
+
+void SchrittOMP()
+{
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < Y; i++)
     {
         for (int j = 0; j < X; j++)
@@ -638,7 +684,7 @@ int main()
 
     for (size_t i = 0; i < anzahl; i++)
     {
-        Schritt();
+        SchrittTiling();
         BewegungAus();
         //Ausgabe();
         //printf("%d \n", i);
