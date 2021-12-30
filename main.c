@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <sys/time.h>
 
-#define Y 32
-#define X 32
+#define Y 1024
+#define X 1024
 
 struct entity
 {
@@ -39,7 +40,7 @@ void FeldFuellen()
                 spielfeld[i][j].alter = 0;
                 spielfeld[i][j].bewegt = 0;
             }
-            else if (r < 10)
+            else if (r < 15)
             {
                 spielfeld[i][j].typ = 'f';
                 spielfeld[i][j].alter = 0;
@@ -533,6 +534,25 @@ void FischSchritt(int i, int j)
     }
 }
 
+void SchrittOMP()
+{
+#pragma omp parallel for
+    for (int i = 0; i < Y; i++)
+    {
+        for (int j = 0; j < X; j++)
+        {
+            if (spielfeld[i][j].typ == 'h' && spielfeld[i][j].bewegt == 0)
+            {
+                HaiSchritt(i, j);
+            }
+            else if (spielfeld[i][j].typ == 'f' && spielfeld[i][j].bewegt == 0)
+            {
+                FischSchritt(i, j);
+            }
+        }
+    }
+}
+
 void Schritt()
 {
     for (int i = 0; i < Y; i++)
@@ -587,16 +607,49 @@ void Ausgabe()
 
 int main()
 {
-    int anzahl = 100;
+    int anzahl = 1000;
     FeldFuellen();
+
+    struct timeval start, end;
+
+    long sec;
+    long usec;
+    double secs;
+
+    gettimeofday(&start, 0);
+
+    for (size_t i = 0; i < anzahl; i++)
+    {
+        SchrittOMP();
+        BewegungAus();
+        //Ausgabe();
+        //printf("%d \n", i);
+    }
+    gettimeofday(&end, 0);
+
+    sec = end.tv_sec - start.tv_sec;
+    usec = end.tv_usec - start.tv_usec;
+    secs = (sec + usec / 1000000.0);
+
+    printf("%.2f sec\n", secs);
+
+    FeldFuellen();
+    gettimeofday(&start, 0);
 
     for (size_t i = 0; i < anzahl; i++)
     {
         Schritt();
         BewegungAus();
-        Ausgabe();
-        printf("%d \n", i);
+        //Ausgabe();
+        //printf("%d \n", i);
     }
+    gettimeofday(&end, 0);
+
+    sec = end.tv_sec - start.tv_sec;
+    usec = end.tv_usec - start.tv_usec;
+    secs = (sec + usec / 1000000.0);
+
+    printf("%.2f sec\n", secs);
 
     return 0;
 }
