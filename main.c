@@ -567,7 +567,10 @@ void SchrittTiling() //Nicht schneller
         {
             for (int x = xstart; x < xend; x++)
             {
-                if (spielfeld[x][y].typ == 'h' && spielfeld[x][y].bewegt == 0)
+                if (spielfeld[x][y].typ == 'l')
+                {
+                }
+                else if (spielfeld[x][y].typ == 'h' && spielfeld[x][y].bewegt == 0)
                 {
                     HaiSchritt(x, y);
                 }
@@ -587,7 +590,10 @@ void SchrittOMP()
     {
         for (int j = 0; j < X; j++)
         {
-            if (spielfeld[i][j].typ == 'h' && spielfeld[i][j].bewegt == 0)
+            if (spielfeld[i][j].typ == 'l')
+            {
+            }
+            else if (spielfeld[i][j].typ == 'h' && spielfeld[i][j].bewegt == 0)
             {
                 HaiSchritt(i, j);
             }
@@ -605,7 +611,10 @@ void Schritt()
     {
         for (int j = 0; j < X; j++)
         {
-            if (spielfeld[i][j].typ == 'h' && spielfeld[i][j].bewegt == 0)
+            if (spielfeld[i][j].typ == 'l')
+            {
+            }
+            else if (spielfeld[i][j].typ == 'h' && spielfeld[i][j].bewegt == 0)
             {
                 HaiSchritt(i, j);
             }
