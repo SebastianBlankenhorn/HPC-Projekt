@@ -368,9 +368,9 @@ void HaiSchritt(int i, int j)
                     spielfeld[i][j].typ = 'l';
                     bewegt = 1;
                     break;
-                default:
-                    break;
                 }
+            default:
+                break;
             }
         } while (bewegt != 1);
     }
@@ -530,9 +530,9 @@ void FischSchritt(int i, int j)
                 spielfeld[i][0].bewegt = 1;
                 bewegt = 1;
                 break;
-            default:
-                break;
             }
+        default:
+            break;
         }
     } while (bewegt != 1);
 
@@ -549,7 +549,7 @@ void SchrittTiling() //Nicht schneller
 #pragma omp parallel for
     for (int block = 0; block < P; block++)
     {
-        int blocky = block / BLOCKS_X;
+        int blocky = block / BLOCKS_Y;
         int blockx = block % BLOCKS_X;
         int ystart = blocky * BLOCKSIZEY;
         int yend = ystart + BLOCKSIZEY;
@@ -694,6 +694,24 @@ int main()
     for (size_t i = 0; i < anzahl; i++)
     {
         SchrittTiling();
+        BewegungAus();
+        //Ausgabe();
+        //printf("%d \n", i);
+    }
+    gettimeofday(&end, 0);
+
+    sec = end.tv_sec - start.tv_sec;
+    usec = end.tv_usec - start.tv_usec;
+    secs = (sec + usec / 1000000.0);
+
+    printf("%.2f sec\n", secs);
+
+    FeldFuellen();
+    gettimeofday(&start, 0);
+
+    for (size_t i = 0; i < anzahl; i++)
+    {
+        Schritt();
         BewegungAus();
         //Ausgabe();
         //printf("%d \n", i);
