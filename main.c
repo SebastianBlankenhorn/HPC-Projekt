@@ -563,20 +563,21 @@ void SchrittTiling() //Nicht schneller
         {
             xend = N;
         }
+
         for (int y = ystart; y < yend; y++)
         {
             for (int x = xstart; x < xend; x++)
             {
-                if (spielfeld[x][y].typ == 'l')
+                if (spielfeld[y][x].typ == 'l')
                 {
                 }
-                else if (spielfeld[x][y].typ == 'h' && spielfeld[x][y].bewegt == 0)
+                else if (spielfeld[y][x].typ == 'h' && spielfeld[y][x].bewegt == 0)
                 {
-                    HaiSchritt(x, y);
+                    HaiSchritt(y, x);
                 }
-                else if (spielfeld[x][y].typ == 'f' && spielfeld[x][y].bewegt == 0)
+                else if (spielfeld[y][x].typ == 'f' && spielfeld[y][x].bewegt == 0)
                 {
-                    FischSchritt(x, y);
+                    FischSchritt(y, x);
                 }
             }
         }
