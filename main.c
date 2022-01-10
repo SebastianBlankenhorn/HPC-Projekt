@@ -205,6 +205,7 @@ void HaiSchritt(int i, int j)
             }
             break;
         default:
+            printf("Error Hai Jagd");
             break;
         }
 
@@ -369,7 +370,9 @@ void HaiSchritt(int i, int j)
                     bewegt = 1;
                     break;
                 }
+                break;
             default:
+                printf("Error Hai Bewegung %d", r);
                 break;
             }
         } while (bewegt != 1);
@@ -531,7 +534,9 @@ void FischSchritt(int i, int j)
                 bewegt = 1;
                 break;
             }
+            break;
         default:
+            printf("Error Fisch %d", r);
             break;
         }
     } while (bewegt != 1);
@@ -563,7 +568,6 @@ void SchrittTiling() //Nicht schneller
         {
             xend = N;
         }
-
         for (int y = ystart; y < yend; y++)
         {
             for (int x = xstart; x < xend; x++)
@@ -672,16 +676,17 @@ int main()
     long usec;
     double secs;
 
-    gettimeofday(&start, 0);
+    //gettimeofday(&start, 0);
 
-    for (size_t i = 0; i < anzahl; i++)
-    {
-        SchrittOMP();
-        BewegungAus();
-        //Ausgabe();
-        //printf("%d \n", i);
-    }
-    gettimeofday(&end, 0);
+    //for (size_t i = 0; i < anzahl; i++)
+    //{
+    //    SchrittOMP();
+    //    BewegungAus();
+    //    //Ausgabe();
+    //    //printf("%d \n", i);
+    //}
+
+    //gettimeofday(&end, 0);
 
     sec = end.tv_sec - start.tv_sec;
     usec = end.tv_usec - start.tv_usec;
@@ -699,6 +704,7 @@ int main()
         //Ausgabe();
         //printf("%d \n", i);
     }
+
     gettimeofday(&end, 0);
 
     sec = end.tv_sec - start.tv_sec;
@@ -708,16 +714,17 @@ int main()
     printf("%.2f sec\n", secs);
 
     FeldFuellen();
-    gettimeofday(&start, 0);
-
-    for (size_t i = 0; i < anzahl; i++)
-    {
-        Schritt();
-        BewegungAus();
-        //Ausgabe();
-        //printf("%d \n", i);
-    }
-    gettimeofday(&end, 0);
+    //gettimeofday(&start, 0);
+    //
+    //for (size_t i = 0; i < anzahl; i++)
+    //{
+    //    Schritt();
+    //    BewegungAus();
+    //    //Ausgabe();
+    //    //printf("%d \n", i);
+    //}
+    //
+    //gettimeofday(&end, 0);
 
     sec = end.tv_sec - start.tv_sec;
     usec = end.tv_usec - start.tv_usec;
