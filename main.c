@@ -48,6 +48,7 @@ struct spielfeldStruct spielfeld2;
 
 const int fischVermehrungsDauer = 5;
 const int haiVermehrungsDauer = 30;
+const int verhungerungsZeit = 10;
 
 int leer = 0;
 
@@ -63,12 +64,12 @@ void FeldFuellen()
             if (r < 3)
             {
                 spielfeld[i][j].typ = 'h';
-                spielfeld[i][j].verhungerungsZeit = 10;
+                spielfeld[i][j].verhungerungsZeit = verhungerungsZeit;
                 spielfeld[i][j].alter = 0;
                 spielfeld[i][j].bewegt = 0;
 
                 spielfeld2.typ[i * Y + j] = 'h';
-                spielfeld2.verhungerungsZeit[i * Y + j] = 10;
+                spielfeld2.verhungerungsZeit[i * Y + j] = verhungerungsZeit;
                 spielfeld2.alter[i * Y + j] = 0;
                 spielfeld2.bewegt[i * Y + j] = 0;
             }
@@ -131,7 +132,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[Y - 1][j].typ = 'h';
                     spielfeld[Y - 1][j].alter = spielfeld[i][j].alter;
-                    spielfeld[Y - 1][j].verhungerungsZeit = 10;
+                    spielfeld[Y - 1][j].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[Y - 1][j].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -145,7 +146,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[i - 1][j].typ = 'h';
                     spielfeld[i - 1][j].alter = spielfeld[i][j].alter;
-                    spielfeld[i - 1][j].verhungerungsZeit = 10;
+                    spielfeld[i - 1][j].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[i - 1][j].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -161,7 +162,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[i][X - 1].typ = 'h';
                     spielfeld[i][X - 1].alter = spielfeld[i][j].alter;
-                    spielfeld[i][X - 1].verhungerungsZeit = 10;
+                    spielfeld[i][X - 1].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[i][X - 1].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -173,7 +174,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[i][j - 1].typ = 'h';
                     spielfeld[i][j - 1].alter = spielfeld[i][j].alter;
-                    spielfeld[i][j - 1].verhungerungsZeit = 10;
+                    spielfeld[i][j - 1].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[i][j - 1].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -187,7 +188,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[0][j].typ = 'h';
                     spielfeld[0][j].alter = spielfeld[i][j].alter;
-                    spielfeld[0][j].verhungerungsZeit = 10;
+                    spielfeld[0][j].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[0][j].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -201,7 +202,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[i + 1][j].typ = 'h';
                     spielfeld[i + 1][j].alter = spielfeld[i][j].alter;
-                    spielfeld[i + 1][j].verhungerungsZeit = 10;
+                    spielfeld[i + 1][j].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[i + 1][j].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -217,7 +218,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[i][0].typ = 'h';
                     spielfeld[i][0].alter = spielfeld[i][j].alter;
-                    spielfeld[i][0].verhungerungsZeit = 10;
+                    spielfeld[i][0].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[i][0].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -231,7 +232,7 @@ void HaiSchritt(int i, int j)
                 {
                     spielfeld[i][j + 1].typ = 'h';
                     spielfeld[i][j + 1].alter = spielfeld[i][j].alter;
-                    spielfeld[i][j + 1].verhungerungsZeit = 10;
+                    spielfeld[i][j + 1].verhungerungsZeit = verhungerungsZeit;
                     spielfeld[i][j + 1].bewegt = 1;
 
                     spielfeld[i][j].typ = 'l';
@@ -435,7 +436,7 @@ void HaiSchritt(int i, int j)
     {
         spielfeld[i][j].typ = 'h';
         spielfeld[i][j].alter = 0;
-        spielfeld[i][j].verhungerungsZeit = 10;
+        spielfeld[i][j].verhungerungsZeit = verhungerungsZeit;
     }
 }
 
@@ -648,7 +649,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[Y * (Y - 1) + j] = 'h';
                     spielfeld2.alter[Y * (Y - 1) + j] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[Y * (Y - 1) + j] = 10;
+                    spielfeld2.verhungerungsZeit[Y * (Y - 1) + j] = verhungerungsZeit;
                     spielfeld2.bewegt[Y * (Y - 1) + j] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -662,7 +663,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[(i - 1) * Y + j] = 'h';
                     spielfeld2.alter[(i - 1) * Y + j] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[(i - 1) * Y + j] = 10;
+                    spielfeld2.verhungerungsZeit[(i - 1) * Y + j] = verhungerungsZeit;
                     spielfeld2.bewegt[(i - 1) * Y + j] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -678,7 +679,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[i * Y + (X - 1)] = 'h';
                     spielfeld2.alter[i * Y + (X - 1)] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[i * Y + (X - 1)] = 10;
+                    spielfeld2.verhungerungsZeit[i * Y + (X - 1)] = verhungerungsZeit;
                     spielfeld2.bewegt[i * Y + (X - 1)] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -690,7 +691,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[i * Y + (j - 1)] = 'h';
                     spielfeld2.alter[i * Y + (j - 1)] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[i * Y + (j - 1)] = 10;
+                    spielfeld2.verhungerungsZeit[i * Y + (j - 1)] = verhungerungsZeit;
                     spielfeld2.bewegt[i * Y + (j - 1)] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -704,7 +705,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[j] = 'h';
                     spielfeld2.alter[j] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[j] = 10;
+                    spielfeld2.verhungerungsZeit[j] = verhungerungsZeit;
                     spielfeld2.bewegt[j] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -718,7 +719,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[(i + 1) * Y + j] = 'h';
                     spielfeld2.alter[(i + 1) * Y + j] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[(i + 1) * Y + j] = 10;
+                    spielfeld2.verhungerungsZeit[(i + 1) * Y + j] = verhungerungsZeit;
                     spielfeld2.bewegt[(i + 1) * Y + j] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -734,7 +735,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[i * Y] = 'h';
                     spielfeld2.alter[i * Y] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[i * Y] = 10;
+                    spielfeld2.verhungerungsZeit[i * Y] = verhungerungsZeit;
                     spielfeld2.bewegt[i * Y] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -748,7 +749,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
                 {
                     spielfeld2.typ[i * Y + j + 1] = 'h';
                     spielfeld2.alter[i * Y + j + 1] = spielfeld2.alter[i * Y + j];
-                    spielfeld2.verhungerungsZeit[i * Y + j + 1] = 10;
+                    spielfeld2.verhungerungsZeit[i * Y + j + 1] = verhungerungsZeit;
                     spielfeld2.bewegt[i * Y + j + 1] = 1;
 
                     spielfeld2.typ[i * Y + j] = 'l';
@@ -952,7 +953,7 @@ void HaiSchrittSoA(int i, int j, int SIMD)
     {
         spielfeld2.typ[Y * i + j] = 'h';
         spielfeld2.alter[Y * i + j] = 0;
-        spielfeld2.verhungerungsZeit[Y * i + j] = 10;
+        spielfeld2.verhungerungsZeit[Y * i + j] = verhungerungsZeit;
     }
 }
 
