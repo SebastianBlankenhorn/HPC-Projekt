@@ -4,7 +4,6 @@
 #include <time.h>
 #include <sys/time.h>
 #include <immintrin.h>
-//#include <mpi.h>
 
 #define Y 1024
 #define X 1024
@@ -48,7 +47,7 @@ struct spielfeldStruct spielfeld2;
 
 const int fischVermehrungsDauer = 5;
 const int haiVermehrungsDauer = 30;
-const int verhungerungsZeit = 10;
+const int verhungerungsZeit = 8;
 
 int leer = 0;
 
@@ -1229,7 +1228,7 @@ void SchrittOMP()
     }
 }
 
-void SchrittSoASIMD()
+void SchrittSoA_SIMD()
 {
     zaehlenSIMD();
     for (int i = 0; i < Y; i++)
@@ -1253,6 +1252,51 @@ void SchrittSoASIMD()
 
 void SchrittSoA()
 {
+    for (int i = 0; i < Y; i++)
+    {
+        for (int j = 0; j < X; j++)
+        {
+            if (spielfeld2.typ[Y * i + j] == 'l')
+            {
+            }
+            else if (spielfeld2.typ[Y * i + j] == 'h' && spielfeld2.bewegt[Y * i + j] == 0)
+            {
+                HaiSchrittSoA(i, j, 0);
+            }
+            else if (spielfeld2.typ[Y * i + j] == 'f' && spielfeld2.bewegt[Y * i + j] == 0)
+            {
+                FischSchrittSoA(i, j, 0);
+            }
+        }
+    }
+}
+
+void SchrittSoA_SIMD_OMP()
+{
+    zaehlenSIMD();
+#pragma omp parallel for collapse(2)
+    for (int i = 0; i < Y; i++)
+    {
+        for (int j = 0; j < X; j++)
+        {
+            if (spielfeld2.typ[Y * i + j] == 'l')
+            {
+            }
+            else if (spielfeld2.typ[Y * i + j] == 'h' && spielfeld2.bewegt[Y * i + j] == 0)
+            {
+                HaiSchrittSoA(i, j, 1);
+            }
+            else if (spielfeld2.typ[Y * i + j] == 'f' && spielfeld2.bewegt[Y * i + j] == 0)
+            {
+                FischSchrittSoA(i, j, 1);
+            }
+        }
+    }
+}
+
+void SchrittSoA_OMP()
+{
+#pragma omp parallel for collapse(2)
     for (int i = 0; i < Y; i++)
     {
         for (int j = 0; j < X; j++)
@@ -1411,10 +1455,10 @@ int main()
 
     printf("OMP: %.2f sec\n", secs);
 
-    secs = 0;
-
-    FeldFuellen();
-
+    //secs = 0;
+    //
+    //FeldFuellen();
+    //
     //for (size_t i = 0; i < anzahl; i++)
     //{
     //    gettimeofday(&start, 0);
@@ -1468,7 +1512,7 @@ int main()
     for (size_t i = 0; i < anzahl; i++)
     {
         gettimeofday(&start, 0);
-        SchrittSoASIMD();
+        SchrittSoA_SIMD();
         gettimeofday(&end, 0);
         sec = end.tv_sec - start.tv_sec;
         usec = end.tv_usec - start.tv_usec;
@@ -1536,6 +1580,54 @@ int main()
     }
 
     printf("SoA: %.2f sec\n", secs);
+
+    secs = 0;
+
+    for (size_t i = 0; i < anzahl; i++)
+    {
+        gettimeofday(&start, 0);
+        SchrittSoA_SIMD_OMP();
+        gettimeofday(&end, 0);
+        sec = end.tv_sec - start.tv_sec;
+        usec = end.tv_usec - start.tv_usec;
+        secs += (sec + usec / 1000000.0);
+        BewegungAusSoA();
+        FeldLeerSoA();
+        if (leer == 1)
+        {
+            printf("Feld leer in Runde: %d\n", i);
+            leer = 0;
+            break;
+        }
+        //Ausgabe();
+        //printf("%d \n", i);
+    }
+
+    printf("SoA OMP: %.2f sec\n", secs);
+
+    secs = 0;
+
+    for (size_t i = 0; i < anzahl; i++)
+    {
+        gettimeofday(&start, 0);
+        SchrittSoA_OMP();
+        gettimeofday(&end, 0);
+        sec = end.tv_sec - start.tv_sec;
+        usec = end.tv_usec - start.tv_usec;
+        secs += (sec + usec / 1000000.0);
+        BewegungAusSoA();
+        FeldLeerSoA();
+        if (leer == 1)
+        {
+            printf("Feld leer in Runde: %d\n", i);
+            leer = 0;
+            break;
+        }
+        //Ausgabe();
+        //printf("%d \n", i);
+    }
+
+    printf("Simd SoA OMP: %.2f sec\n", secs);
 
     return 0;
 }
